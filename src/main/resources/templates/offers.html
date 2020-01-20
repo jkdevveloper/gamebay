@@ -1,87 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>GameBay Login</title>
+    <title>GameBay Offers</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
-    <style>
-        body {
-            padding-top: 90px
-        }
-
-        @media (min-width: 768px) {
-            body {
-                padding-top: 0
-            }
-        }
-
-        @media (min-width: 768px) {
-            body {
-                margin-left: 232px
-            }
-        }
-
-        .navbar.fixed-left {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1030
-        }
-
-        @media (min-width: 768px) {
-            .navbar.fixed-left {
-                bottom: 0;
-                width: 232px;
-                flex-flow: column nowrap;
-                align-items: flex-start
-            }
-
-            .navbar.fixed-left .navbar-collapse {
-                flex-grow: 0;
-                flex-direction: column;
-                width: 100%
-            }
-
-            .navbar.fixed-left .navbar-collapse .navbar-nav {
-                flex-direction: column;
-                width: 100%
-            }
-
-            .navbar.fixed-left .navbar-collapse .navbar-nav .nav-item {
-                width: 100%
-            }
-
-            .navbar.fixed-left .navbar-collapse .navbar-nav .nav-item .dropdown-menu {
-                top: 0
-            }
-        }
-
-        @media (min-width: 768px) {
-            .navbar.fixed-left {
-                right: auto
-            }
-
-            .navbar.fixed-left .navbar-nav .nav-item .dropdown-toggle:after {
-                border-top: .3em solid transparent;
-                border-left: .3em solid;
-                border-bottom: .3em solid transparent;
-                border-right: none;
-                vertical-align: baseline
-            }
-
-            .navbar.fixed-left .navbar-nav .nav-item .dropdown-menu {
-                left: 100%
-            }
-        }
-    </style>
+    <link href="../static/css/panelstyle.css" th:href="@{/css/panelstyle.css}" rel="stylesheet" />
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/index">GameBay</a>
+    <a class="navbar-brand" href="/index">Game<span class="logo-text">Bay</span> </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -101,7 +31,7 @@
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/panel" th:text="${user.login}">
+                <a class="nav-link" href="/panel">
                     <i class="far fa-user"></i>
                 </a>
             </li>
@@ -111,10 +41,11 @@
                     <i class="fas fa-shopping-cart"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
+                    <div th:each="game : ${user.getCart()}">
+                        <a class="dropdown-item" href="#" th:text="${game.getTitle()}"></a>
+                    </div>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" href="/cart">Przejdź do koszyka</a>
                 </div>
             </li>
         </ul>
@@ -154,8 +85,27 @@
 
 
 
-
-
+<div class="container">
+    <a type="button" href="/newoffer" class="btn btn-primary">Dodaj ofertę</a>
+<table class="table" >
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Tytuł</th>
+        <th scope="col">Szczegóły</th>
+        <th scope="col">Cena</th>
+    </tr>
+    </thead>
+    <tbody th:each="offer : ${user.getOffers()}">
+    <tr>
+        <th scope="row" th:text = "${offer.getId()}"></th>
+        <td th:text = "${offer.getTitle()}"></td>
+        <td>INFO</td>
+        <td th:text = "${offer.getPrice()}"></td>
+    </tr>
+    </tbody>
+</table>
+</div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

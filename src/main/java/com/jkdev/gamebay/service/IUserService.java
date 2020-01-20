@@ -14,13 +14,17 @@ public interface IUserService {
 
     void deleteUser(Long id);
 
-    void updateUser(User place);
+    void updateUser(User user);
 
     void addGameToUser(Long id, Game game);
 
     void addCoins(Long userId, Integer amount);
 
     void removeCoins(Long userId, Integer amount);
+
+    void changeGameFromUserToUser(Game game, User seller, User buyer);
+
+    void addToCart(Game game, User user);
 
     User findByUserName(String username);
 }

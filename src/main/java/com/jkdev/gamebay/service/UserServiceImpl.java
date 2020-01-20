@@ -4,16 +4,13 @@ import com.jkdev.gamebay.entity.Game;
 import com.jkdev.gamebay.entity.User;
 import com.jkdev.gamebay.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements IUserService {
+public class UserServiceImpl implements IUserService {
 
     @Autowired
     IUserRepository userRepository;
@@ -48,7 +45,7 @@ public class UserService implements IUserService {
         Optional<User> result = this.userRepository.findById(id);
         if (result.isPresent()) {
             User tempUser = result.get();
-            tempUser.addGame(game);
+            //tempUser.addGame(game);
             this.userRepository.save(tempUser);
         } else
             throw new RuntimeException("User not found");
@@ -85,7 +82,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findByUserName(String username){
+    public void changeGameFromUserToUser(Game game, User seller, User buyer) {
+
+    }
+
+    @Override
+    public void addToCart(Game game, User user) {
+        User u = this.userRepository.findByUsername(user.getUsername());
+        u.addGameToCart(game);
+        this.userRepository.save(u);
+    }
+
+    @Override
+    public User findByUserName(String username) {
         return this.userRepository.findByUsername(username);
     }
 }

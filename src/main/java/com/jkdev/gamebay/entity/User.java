@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,26 +14,41 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.*;
 
+import static javax.persistence.CascadeType.*;
+
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user")
+
 public class User implements UserDetails{
+
+    public User(Integer coinBalance, String username, String password) {
+        this.coinBalance = coinBalance;
+        this.username = username;
+        this.password = password;
+    }
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Game> games;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade={MERGE, REMOVE, REFRESH, DETACH})
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     private List<Game> cart;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={MERGE, REMOVE, REFRESH, DETACH})
+    @JsonManagedReference
+    private List<Offer> offers;
+
+    @OneToMany(mappedBy = "seller", cascade={MERGE, REMOVE, REFRESH, DETACH})
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
+    private List<Transaction> transactions;
 
     @Column(name = "coinbalance")
     private Integer coinBalance;
@@ -40,28 +57,32 @@ public class User implements UserDetails{
     @Size(min = 0, max = 14)
     private String username;
 
-
-    /*@Column(name = "email")
-    @Size(min = 0, max = 14)
-    private String email;*/
-
     @Column(name = "password")
     @Size(min = 0, max = 14)
     private String password;
 
-    public void addGame(Game game) {
-        if (this.games == null) {
-            this.games = new ArrayList<>();
+    public void addOffer(Offer offer) {
+        if (this.offers == null) {
+            this.offers = new ArrayList<>();
         }
-        game.setUser(this);
-        games.add(game);
+        offer.setUser(this);
+        offers.add(offer);
     }
 
     public void addGameToCart(Game game){
         if(this.cart == null){
             this.cart = new ArrayList<>();
         }
+        game.setUser(this);
         this.cart.add(game);
+    }
+
+    public void addTransaction(Transaction transaction){
+        if(this.transactions == null){
+            this.transactions = new ArrayList<>();
+        }
+        transaction.setSeller(this);
+        this.transactions.add(transaction);
     }
 
     @Override
@@ -97,10 +118,5 @@ public class User implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public String toString(){
-        return this.id + this.username + this.password;
     }
 }
