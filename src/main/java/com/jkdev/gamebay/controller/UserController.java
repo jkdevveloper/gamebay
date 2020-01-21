@@ -2,11 +2,9 @@ package com.jkdev.gamebay.controller;
 
 import com.jkdev.gamebay.entity.Game;
 import com.jkdev.gamebay.entity.Offer;
+import com.jkdev.gamebay.entity.OwnedKey;
 import com.jkdev.gamebay.entity.User;
-import com.jkdev.gamebay.service.IGameService;
-import com.jkdev.gamebay.service.IOfferService;
-import com.jkdev.gamebay.service.ITransactionService;
-import com.jkdev.gamebay.service.IUserService;
+import com.jkdev.gamebay.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -29,6 +29,8 @@ public class UserController {
     private IOfferService offerService;
     private Validator validator;
 
+    @Autowired
+    IOwnedKeyService ownedKeyService;
 
     @Lazy
     @Autowired
@@ -46,6 +48,33 @@ public class UserController {
         this.offerService = offerService;
     }
 
+
+    @PostMapping("/search")
+    public String afterSearch(@RequestParam("search") String search_string, Model model){
+        List<Offer> offers = offerService.getOffers();
+        List<Offer> result_list = new ArrayList<>();
+        for(Offer o : offers){
+            if(o.getTitle().contains(search_string)){
+                result_list.add(o);
+            }
+        }
+        org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", this.userService.findByUserName(u.getUsername()));
+        model.addAttribute("results", result_list);
+
+        return "results";
+    }
+
+    @GetMapping("/search")
+    public String searchResults(@ModelAttribute("results") List<Offer> results, Model model) {
+
+        org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", this.userService.findByUserName(u.getUsername()));
+        model.addAttribute("results", results);
+
+
+        return "results";
+    }
 
     @GetMapping("/index")
     public String index(Model model) {
@@ -66,11 +95,6 @@ public class UserController {
         return "transactions";
     }
 
-    @GetMapping("/search_results")
-    public String searchResults() {
-
-        return "results";
-    }
 
     @GetMapping("/game")
     public String gameInfo(Model model, @RequestParam Long id){
@@ -96,6 +120,7 @@ public class UserController {
         this.userService.saveUser(user);
         User us = this.userService.findByUserName(u.getUsername());
         model.addAttribute("user", us);
+
         return "cart";
     }
 
@@ -111,8 +136,9 @@ public class UserController {
         model.addAttribute("sum", sum);
         return "cart";
     }
-    /*@PostMapping("/buyGames")
-    public String buyGames(){
+
+    @PostMapping("/buyGames")
+    public String buyGames(Model model){
         org.springframework.security.core.userdetails.User u =
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUserName(u.getUsername());
@@ -123,11 +149,21 @@ public class UserController {
         }
 
         if(user.getCoinBalance() > sum){
-            offerService.deleteOffer();
-            user.a
-        }
+            for(Game g : userService.findByUserName(u.getUsername()).getCart()){
+                OwnedKey ownedKey = new OwnedKey(g.getTitle(), g.getGame_key());
+                ownedKey.setUser(user);
+                user.addGameToCollection(ownedKey);
+                ownedKeyService.saveOwnedKey(ownedKey);
+                gameService.deleteGame(g.getId());
+            }
 
-    }*/
+        }
+        user.setCoinBalance(user.getCoinBalance() - sum);
+        model.addAttribute("user", user);
+        userService.saveUser(user);
+
+        return "collection";
+    }
 
     @GetMapping("/doladowanie")
     public String addCoins(Model model){
@@ -143,8 +179,10 @@ public class UserController {
         org.springframework.security.core.userdetails.User u =
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = this.userService.findByUserName(u.getUsername());
-        model.addAttribute("user", user);
-        user.setCoinBalance(user.getCoinBalance() + amount);
+
+        Integer balance = user.getCoinBalance();
+
+        user.setCoinBalance(balance + amount);
 
         this.userService.saveUser(user);
 
@@ -153,6 +191,7 @@ public class UserController {
 
         return "panel";
     }
+
     @GetMapping("/newoffer")
     public String addOffer(Model model){
         org.springframework.security.core.userdetails.User u =

@@ -41,17 +41,22 @@ public class User implements UserDetails{
     @JsonManagedReference
     private List<Game> cart;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={MERGE, REMOVE, REFRESH, DETACH})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={MERGE, REFRESH, DETACH})
     @JsonManagedReference
     private List<Offer> offers;
 
-    @OneToMany(mappedBy = "seller", cascade={MERGE, REMOVE, REFRESH, DETACH})
+    @OneToMany(mappedBy = "seller", cascade={MERGE, REFRESH, DETACH})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     private List<Transaction> transactions;
 
+    @OneToMany(mappedBy = "user", cascade={MERGE, REFRESH, DETACH})
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference
+    private List<OwnedKey> ownedKeys;
+
     @Column(name = "coinbalance")
-    private Integer coinBalance;
+    private Integer coinBalance = 0;
 
     @Column(name = "username")
     @Size(min = 0, max = 14)
@@ -83,6 +88,14 @@ public class User implements UserDetails{
         }
         transaction.setSeller(this);
         this.transactions.add(transaction);
+    }
+
+    public void addGameToCollection(OwnedKey ownedKey){
+        if(this.ownedKeys == null){
+            this.ownedKeys = new ArrayList<>();
+        }
+        ownedKey.setUser(this);
+        this.ownedKeys.add(ownedKey);
     }
 
     @Override

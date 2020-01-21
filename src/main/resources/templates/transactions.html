@@ -83,11 +83,6 @@
 
 </nav>
 
-<div class="container" aria-labelledby="navbarDropdown"
-     th:each="transaction : ${user.getTransactions()}">
-    <p th:text="${transaction.getDate()}"></p>
-</div>
-
 <div class="container">
     <table class="table" >
         <thead>

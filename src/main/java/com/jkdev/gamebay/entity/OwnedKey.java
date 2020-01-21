@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import static javax.persistence.CascadeType.REMOVE;
 
@@ -16,14 +14,14 @@ import static javax.persistence.CascadeType.REMOVE;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "game")
+@Table(name = "ownedkeys")
 @Proxy(lazy=false)
-public class Game {
+@org.springframework.security.core.Transient
+public class OwnedKey {
 
-    public Game(String title, String game_key, Integer price){
+    public OwnedKey(String title, String gameKey){
         this.title = title;
-        this.game_key = game_key;
-        this.price = price;
+        this.gameKey = gameKey;
     }
 
     @Id
@@ -31,17 +29,11 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotNull
     @Column(name = "title")
     String title;
 
-    @NotNull
-    @Column(name = "game_key")
-    String game_key;
-
-    @NotNull
-    @Column(name = "price")
-    Integer price;
+    @Column(name = "gamekey")
+    String gameKey;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "user_id", nullable = false)
