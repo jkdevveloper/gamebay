@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
     <link href="../static/css/panelstyle.css" th:href="@{/css/panelstyle.css}" rel="stylesheet" />
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -30,9 +31,12 @@
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/panel">
+                <a class="nav-link" th:href="@{/panel}">
                     <i class="far fa-user"></i>
+                    <span th:text="${user.getUsername()}"/>
                 </a>
+
+
             </li>
             <li class="nav-item dropdown mr-auto">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -52,43 +56,128 @@
 </nav>
 
 
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-left">
-        <a class="navbar-brand" href="/panel">Panel Użytkownika</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-                aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-left">
+    <a class="navbar-brand" href="/panel">Panel Użytkownika</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/panel">Panel użytkownika</a>
-                    </li>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="/panel">Panel użytkownika</a>
+            </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="/transactions">Historia transakcji</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/offers">Moje oferty</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/settings">Ustawienia</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href = "@{/logout}">Wyloguj</a>
-                    </li>
-                </ul>
+            <li class="nav-item">
+                <a class="nav-link" href="/transactions">Historia transakcji</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/offers">Moje oferty</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
+            </li>
+        </ul>
 
+    </div>
+
+</nav>
+
+<div class="container" style="margin-top: 40px">
+    <div class="row">
+        <div class="col-sm-6 mb-3 mb-md-0">
+            <div class="card border border-secondary rounded" style="height:100%;">
+                <div class="card-body card-color">
+
+                    <h1 class="card-title">
+                        <i class="far fa-user fa-3x"></i><th:block th:text="|  ${user.getUsername()}|"/>
+
+                </h1>
+
+                    <p class="card-text" th:text="|Id użytkownika:   ${user.getId()}|"></p>
+                    <p th:text="|Adres e-mail:  ${user.getEmail()}|"></p>
+
+                </div>
             </div>
+        </div>
 
-    </nav>
+        <div class="col-sm-6">
+            <div class="card border border-secondary rounded" style="height:100%;">
+                <div class="card-body card-color">
 
-<div class="container">
-<p th:text="${user.username}"></p>
-<p th:text="${user.password}"></p>
-<p th:text="${user.getId()}"></p>
-<p th:text="${user.getCoinBalance()}"></p>
-<a type="button" href="/doladowanie" class="btn btn-primary">Doładuj</a>
+                    <h1 class="card-title">
+                        <img src="../static/images/icon.png" style="width:50px; height:54px;" th:src="@{/images/icon.png}"/>
+                        Saldo <span class="logo-text">g</span>Coin</h1>
+                    <div class="container inline-display">
+                        <h1 class="card-text" th:text="${user.getCoinBalance()}"></h1>
+                    </div>
+                    <a href="/doladowanie" style="background-color:#eda007" class="btn btn-primary bottom ">Doładuj</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row rel">
+
+
+        <div class="col-sm-12">
+            <div class="card border border-secondary rounded">
+                <div class="card-body card-color">
+
+                    <h1 class="card-title"><span class="fas fa-user-cog fa-3x"></span> Ustawienia konta</h1>
+
+                    <div class="container">
+                        <div class="row rel">
+
+                            <div class="col-lg-6">
+
+                                <form th:action="@{/panel}" th:method="post">
+                                    <h2>Zmiana Email</h2>
+                                    <div class="form-group">
+                                        <label for="changeEmailInput">Adres Email</label>
+                                        <input type="email" class="form-control" id="changeEmailInput"
+                                               aria-describedby="emailHelp" placeholder="Adres Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="RetypeEmailInput">Powtórz Email</label>
+                                        <input type="password" class="form-control" id="RetypeEmailInput"
+                                               placeholder="Powtórz Email">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary" style="background-color:#eda007">
+                                        Zatwierdź
+                                    </button>
+                                </form>
+
+                            </div>
+
+                            <div class="col-lg-6">
+                                <form>
+                                    <div class="form-group">
+                                        <h2>Zmiana hasła</h2>
+                                        <label for="changePasswordInput">Hasło</label>
+                                        <input type="password" class="form-control" id="changePasswordInput"
+                                               aria-describedby="emailHelp" placeholder="Hasło">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="retypePasswordInput">Powtórz hasło</label>
+                                        <input type="password" class="form-control" id="retypePasswordInput"
+                                               placeholder="Powtórz hasło">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" style="background-color:#eda007">
+                                        Zatwierdź
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

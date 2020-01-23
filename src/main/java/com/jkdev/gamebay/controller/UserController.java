@@ -153,6 +153,7 @@ public class UserController {
                 OwnedKey ownedKey = new OwnedKey(g.getTitle(), g.getGame_key());
                 ownedKey.setUser(user);
                 user.addGameToCollection(ownedKey);
+
                 ownedKeyService.saveOwnedKey(ownedKey);
                 gameService.deleteGame(g.getId());
             }
@@ -234,13 +235,6 @@ public class UserController {
         return "sum";
     }
 
-    @GetMapping("/settings")
-    public String settings(Model model) {
-        org.springframework.security.core.userdetails.User u =
-                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("user", this.userService.findByUserName(u.getUsername()));
-        return "settings";
-    }
 
     @GetMapping("/login")
     public String login() {
@@ -259,6 +253,19 @@ public class UserController {
         model.addAttribute("user", userService.findByUserName(u.getUsername()));
         return "panel";
     }
+
+    @PostMapping("/panel")
+    public String userModified(Model model){
+        org.springframework.security.core.userdetails.User u =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", userService.findByUserName(u.getUsername()));
+
+
+
+
+        return "panel";
+    }
+
 
     @GetMapping("/register")
     public String afterRegister(Model model) {

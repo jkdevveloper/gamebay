@@ -1,6 +1,27 @@
 .logo-text{
     color:#eda007;
 }
+
+.card-color{
+    background: rgba(102, 112, 121, 0.91) !important;
+    color:white;
+}
+
+.bottom{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.inline-display{
+    display:inline-block;
+}
+
+
+.rel{
+    margin-top: 40px;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     padding-top: 90px

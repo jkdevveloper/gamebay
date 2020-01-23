@@ -66,6 +66,9 @@ public class User implements UserDetails{
     @Size(min = 0, max = 14)
     private String password;
 
+    @Column(name = "email")
+    private String email;
+
     public void addOffer(Offer offer) {
         if (this.offers == null) {
             this.offers = new ArrayList<>();
@@ -88,6 +91,9 @@ public class User implements UserDetails{
         }
         transaction.setSeller(this);
         this.transactions.add(transaction);
+    }
+    public void removeGame(Game game){
+        this.cart.remove(game);
     }
 
     public void addGameToCollection(OwnedKey ownedKey){
