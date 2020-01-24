@@ -1,0 +1,16 @@
+@media(min-width: 768px){
+#logo{
+    margin-top: 40px;
+    font-size: 80px;
+}
+    #form{
+        margin-top:80px;
+    }
+    #size{
+        font-size:55px;
+    }
+}
+
+.logo-text{
+    color:#eda007;
+}

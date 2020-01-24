@@ -7,6 +7,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
+    <link type="text/css" href="../static/css/login.css" th:href="@{/css/login.css}"/>
 
 </head>
 <body style = "font-family: 'Roboto', sans-serif;">
@@ -50,9 +51,14 @@
     </div>
 </nav>
 
+<h1 class="text-center" id="logo">
+    <img src="../static/images/icon.png" style="width:80px; height:84px;"
+         th:src="@{/images/icon.png}"/>
+    Game<span class="logo-text">Bay</span></h1>
 
-<h1 class="text-center">Logowanie</h1>
-<div class="container">
+<div class="container" id="form">
+
+    <h1 class="text-center" id="size">Logowanie</h1>
 <div class="row justify-content-center align-items-center h-auto w-auto">
     <form action="#" th:action="@{/login}"  method="post">
         <div class="form-group">
@@ -71,12 +77,10 @@
             </div>
             <p class="text-black-50 text-center w-100">Nie masz jeszcze konta? <a href="/register">zarejestruj się</a> teraz!</p>
         </div>
-        <div th:if="${param.error}" class="alert alert-error" style = "color:red">
-            Invalid username and password.
+        <div th:if="${param.error}" class="alert alert-error text-center" style = "color:red">
+            Niepoprawny login lub hasło!
         </div>
-        <div th:if="${param.logout}" class="alert alert-success">
-            You have been logged out.
-        </div>
+
 
     </form>
 </div>

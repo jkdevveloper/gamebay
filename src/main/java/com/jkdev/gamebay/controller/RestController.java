@@ -73,8 +73,8 @@ public class RestController {
                                  @PathVariable String gameName) {
 
         User user = new User(7000, login, password);
-        Game g = new Game("Cyberpunk 2077", "Key", 1000);
-        Game g1 = new Game(gameName, "Key", 12400);
+      /*  Game g = new Game("Cyberpunk 2077", "Key", 1000);
+        Game g1 = new Game(gameName, "Key", 12400);*/
         Offer offer = new Offer("Wither", "Gamekey", 1000);
         Date d = new Date();
 
@@ -83,13 +83,19 @@ public class RestController {
         user.addTransaction(t);
         user.addOffer(offer);
         //user.addGameToCart(g);
-        user.addGameToCart(g1);
+        //user.addGameToCart(g1);
         offerService.saveOffer(offer);
-        this.gameService.saveGame(g1);
+        //this.gameService.saveGame(g1);
         //this.gameService.saveGame(g);
         this.transactionService.saveTransaction(t);
         this.userService.saveUser(user);
 
         return "done";
+    }
+
+    @PostMapping("/deleteGame/{id}")
+    public String deleteGame(@PathVariable Long id){
+        this.gameService.deleteGame(id);
+        return "works?";
     }
 }

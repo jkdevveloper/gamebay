@@ -1,6 +1,19 @@
+body{
+    font-family: 'Roboto', sans-serif;
+}
+
 .logo-text{
     color:#eda007;
 }
+
+#packets{
+    margin-top:40px;
+}
+
+#coin-form{
+    margin-top:40px;
+}
+
 
 .card-color{
     background: rgba(102, 112, 121, 0.91) !important;

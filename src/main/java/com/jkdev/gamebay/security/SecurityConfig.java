@@ -43,17 +43,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
                 .authorizeRequests()
-                .antMatchers("/api/**", "/register", "/index", "/getUser/**")
+                .antMatchers("/game","/resources/**","/images/**","/api/**", "/register", "/index", "/getUser/**", "/css/**", "/*.css", "/static/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/panel")
                 .loginPage("/login")
+                .defaultSuccessUrl("/index")
                 .permitAll()
                 .and()
                 .logout()

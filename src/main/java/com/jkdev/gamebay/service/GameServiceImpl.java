@@ -40,4 +40,9 @@ public class GameServiceImpl implements IGameService {
     public void updateGame(Game game) {
         this.gameRepository.save(game);
     }
+
+    @Override
+    public void deleteGame(Game game) {
+        this.gameRepository.delete(game);
+    }
 }

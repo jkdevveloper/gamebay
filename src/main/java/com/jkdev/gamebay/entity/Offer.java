@@ -8,7 +8,7 @@ import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 
-import static javax.persistence.CascadeType.REMOVE;
+
 
 @Data
 @Entity
@@ -39,7 +39,7 @@ public class Offer {
     @Column(name = "price")
     Integer price;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     User user;

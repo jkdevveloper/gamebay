@@ -22,7 +22,6 @@ import static javax.persistence.CascadeType.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user")
-
 public class User implements UserDetails{
 
     public User(Integer coinBalance, String username, String password) {
@@ -36,21 +35,21 @@ public class User implements UserDetails{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "user", cascade={MERGE, REMOVE, REFRESH, DETACH})
+    @OneToMany(mappedBy = "user", cascade={MERGE, REFRESH, DETACH})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     private List<Game> cart;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={MERGE, REFRESH, DETACH})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade={REFRESH, DETACH})
     @JsonManagedReference
     private List<Offer> offers;
 
-    @OneToMany(mappedBy = "seller", cascade={MERGE, REFRESH, DETACH})
+    @OneToMany(mappedBy = "seller", cascade={REFRESH, DETACH})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     private List<Transaction> transactions;
 
-    @OneToMany(mappedBy = "user", cascade={MERGE, REFRESH, DETACH})
+    @OneToMany(mappedBy = "user", cascade={REFRESH, DETACH})
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     private List<OwnedKey> ownedKeys;

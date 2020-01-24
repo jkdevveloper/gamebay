@@ -1,18 +1,22 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>GameBay registration</title>
+    <title>GameBay Rejestracja</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
-
+    <style>
+        .logo-text{
+            color:#eda007;
+        }
+    </style>
 </head>
 <body style = "font-family: 'Roboto', sans-serif;">
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/index">GameBay</a>
+    <a class="navbar-brand" href="/index">Game<span class="logo-text">Bay</span> </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -51,17 +55,23 @@
     </div>
 </nav>
 
-<h1 class="text-center">Rejestracja</h1>
-<div class="container-fluid">
-<div class="row justify-content-center align-items-center h-auto w-auto">
+<h1 class="text-center" id="logo">
+    <img src="../static/images/icon.png" style="width:80px; height:84px;"
+         th:src="@{/images/icon.png}"/>
+    Game<span class="logo-text">Bay</span></h1>
+<div class="container" id="form">
+
+    <h1 class="text-center" id="size">Rejestracja</h1>
+
+    <div class="row justify-content-center align-items-center h-auto w-auto">
     <form action="#" th:action="@{/register}" th:object="${user}" method="post">
-       <!-- <div class="form-group">
-            <input type="email" th:field="*{email}" class="form-control" id="loginInput"
-                   aria-describedby="emailHelp" placeholder="E-mail">
-        </div>-->
+        <div class="form-group">
+            <input type="email" th:field="*{email}" class="form-control" id="emailInput"
+                   placeholder="E-mail">
+        </div>
         <div class="form-group">
             <input type="text" th:field="*{username}" class="form-control" id="loginInput"
-                   aria-describedby="emailHelp" placeholder="Login">
+                   placeholder="Login">
         </div>
         <div class="form-group">
             <input type="password" th:field="*{password}" class="form-control" id="passwordInput"
@@ -73,9 +83,10 @@
                 <button type="submit" class="btn btn-primary w-100">Zarejestruj</button>
             </div>
             <p class="text-black-50 w-100 text-center">Masz już konto? <a href="/register">zaloguj się</a> teraz!</p>
-
         </div>
-
+        <div th:if="${param.error}" class="alert alert-error text-center" style = "color:red">
+            Użytkownik o takim loginie lub e-mailu już istnieje!
+        </div>
     </form>
 
 </div>

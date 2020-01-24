@@ -18,9 +18,11 @@ import static javax.persistence.CascadeType.REMOVE;
 @NoArgsConstructor
 @Table(name = "game")
 @Proxy(lazy=false)
+@org.springframework.security.core.Transient
 public class Game {
 
-    public Game(String title, String game_key, Integer price){
+    public Game(Long id,String title, String game_key, Integer price){
+        this.id = id;
         this.title = title;
         this.game_key = game_key;
         this.price = price;
@@ -28,7 +30,7 @@ public class Game {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     Long id;
 
     @NotNull
@@ -43,7 +45,7 @@ public class Game {
     @Column(name = "price")
     Integer price;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     User user;

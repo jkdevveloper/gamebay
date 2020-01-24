@@ -30,7 +30,7 @@ public class Transaction {
     @Column(name = "price")
     Integer price;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     User seller;

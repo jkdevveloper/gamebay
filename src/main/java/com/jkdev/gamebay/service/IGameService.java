@@ -17,5 +17,7 @@ public interface IGameService {
 
     void updateGame(Game game);
 
+    void deleteGame(Game game);
+
 
 }

@@ -11,19 +11,21 @@
         .jumbotron{
             margin-top: 30px;
         }
+        .logo-text{
+            color:#eda007;
+        }
     </style>
 </head>
 <body style = "font-family: 'Roboto', sans-serif;">
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/index">GameBay</a>
+    <a class="navbar-brand" href="/index">Game<span class="logo-text">Bay</span> </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
         <form>
             <div class="input-group">
                 <input class="form-control" type="search" placeholder="Wyszukaj grę.." aria-label="Search">
@@ -36,9 +38,12 @@
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/panel" >
-                    <i class="far fa-user" th:text = "${user.getUsername()}"></i>
+                <a class="nav-link" th:href="@{/panel}">
+                    <i class="far fa-user"></i>
+                    <span th:text="${user.getUsername()}"/>
                 </a>
+
+
             </li>
             <li class="nav-item dropdown mr-auto">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -57,22 +62,86 @@
     </div>
 </nav>
 <div class="container">
-<div class="jumbotron">
-    <h2 class="display-4" th:text = "${game.getTitle()}">Hello, world!</h2>
-    <p class="lead" th:text = "${game.getUser().getUsername()}"></p>
-    <hr class="my-4">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col col-4">
+                <img src="https://gamepedia.cursecdn.com/minecraft_pl_gamepedia/thumb/7/7d/Xbox_One_Edition_Cover.png/200px-Xbox_One_Edition_Cover.png"
+                     class="card-img-top" alt="..." style="width:100%; height:100%">
+            </div>
+            <div class="col col-8">
+                <h2 class="display-4" th:text = "${game.getTitle()}"></h2>
+                <p class="lead" th:text = "|Sprzedający: ${game.getUser().getUsername()}|"></p>
+                <hr class="my-4">
 
+                <span th:text="${game.getPrice()}">Price</span>
+                <img src="../static/images/icon.jpg" style="width:24px; height: 24px;" th:src="@{/images/icon.png}"/>
 
-    <span th:text="${game.getPrice()}"></span>
-    <img src="../static/images/icon.jpg" style="width:24px; height: 24px;" th:src="@{/images/icon.png}"/>
+                <br/>
+                <div class="lead">
+                    <form class = "float-right" th:action = "@{/addToCart(id=${game.getId()})}" method="post">
+                        <button type="submit" class="btn btn-sm btn-primary float-right">Dodaj do koszyka</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-    <br/>
-    <div class="lead">
-    <form class = "float-right" th:action = "@{/addToCart(id=${game.getId()})}" method="post">
-        <button type="submit" class="btn btn-sm btn-primary float-right">Dodaj do koszyka</button>
-    </form>
     </div>
-</div>
+    <h2>Zobacz również</h2>
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 100%; height:100%">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <img src="https://gamepedia.cursecdn.com/minecraft_pl_gamepedia/thumb/7/7d/Xbox_One_Edition_Cover.png/200px-Xbox_One_Edition_Cover.png"
+                                 class="card-img-top" alt="..." style="width:100%; height:100%">
+                        </div>
+                        <div class="col-8">
+                            <h2 class="display-4" th:text = "${game.getTitle()}"></h2>
+
+                            <hr class="my-4">
+
+                            <span th:text="${game.getPrice()}"></span>
+                            <img src="../static/images/icon.jpg" style="width:24px; height: 24px;" th:src="@{/images/icon.png}"/>
+
+                            <br/>
+                            <div class="lead">
+                                <form class = "float-right" th:action = "@{/addToCart(id=${game.getId()})}" method="post">
+                                    <button type="submit" class="btn btn-sm btn-primary float-right">Dodaj do koszyka</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 100%; height:100%">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <img src="https://gamepedia.cursecdn.com/minecraft_pl_gamepedia/thumb/7/7d/Xbox_One_Edition_Cover.png/200px-Xbox_One_Edition_Cover.png"
+                                 class="card-img-top" alt="..." style="width:100%; height:100%">
+                        </div>
+                        <div class="col-8">
+                            <h2 class="display-4" th:text = "${game.getTitle()}"></h2>
+                            <hr class="my-4">
+
+                            <span th:text="${game.getPrice()}"></span>
+                            <img src="../static/images/icon.jpg" style="width:24px; height: 24px;" th:src="@{/images/icon.png}"/>
+
+                            <br/>
+                            <div class="lead">
+                                <form class = "float-right" th:action = "@{/addToCart(id=${game.getId()})}" method="post">
+                                    <button type="submit" class="btn btn-sm btn-primary float-right">Dodaj do koszyka</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
