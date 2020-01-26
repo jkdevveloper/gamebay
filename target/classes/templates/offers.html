@@ -65,14 +65,17 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link active" href="/panel">Panel użytkownika</a>
+                <a class="nav-link" href="/panel">Panel użytkownika</a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="/transactions">Historia transakcji</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/offers">Moje oferty</a>
+                <a class="nav-link active" href="/offers">Moje oferty</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/collection">Moja kolekcja</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
@@ -86,8 +89,9 @@
 
 
 <div class="container rel">
-    <a type="button" href="/newoffer" class="btn btn-primary">Dodaj ofertę</a>
-<table class="table" >
+    <h1>Twoje oferty</h1>
+    <a type="button" href="/newoffer" class="btn btn-primary rel">Dodaj ofertę</a>
+<table class="table rel">
     <thead>
     <tr>
         <th scope="col">#</th>

@@ -7,12 +7,22 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
+    <style>
+        .logo-text{
+            color:#eda007;
+        }
+        .unstyled-link {
+            color: inherit;
+            font-weight: bold;
+            text-decoration: none;
 
+        }
+    </style>
 </head>
 <body style="font-family: 'Roboto', sans-serif;">
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/index">GameBay</a>
+    <a class="navbar-brand" href="/index">Game<span class="logo-text">Bay</span> </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -34,6 +44,11 @@
             <li class="nav-item">
                 <a class="nav-link" href="/panel">
                     <i class="far fa-user" th:text="${user.getUsername()}"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">
+                    <i class="fas fa-sign-out-alt"></i>Wyloguj
                 </a>
             </li>
             <li class="nav-item dropdown mr-auto">
@@ -64,13 +79,14 @@
                          class="card-img-top" alt="...">
                 </a>
                 <div class="card-body">
-                    <a th:href="@{/game(id=${game.getId()})}">
+                    <a class="unstyled-link" th:href="@{/game(id=${game.getId()})}">
                         <p class="card-text" th:text="${game.getTitle()}"></p>
                     </a>
-                    <p class="card-text" th:text="${game.getPrice()}"></p>
-                    <img src="../static/images/icon.jpg" style="width:32px; height: 32px;" th:src="@{/images/icon.png}"/>
-                    <button class="btn btn-primary">add to cart</button>
+                    <div class="dropdown-divider"></div>
 
+                    <span class="card-text text-right" th:text="${game.getPrice()}"></span>
+                    <img src="../static/images/icon.png" style="width:24px; height: 24px;" th:src="@{/images/icon.png}"/>
+                    <a type = "button" class="btn btn-primary btn-sm float-right" th:href="@{/game(id=${game.getId()})}">Więcej</a>
                 </div>
 
             </div>

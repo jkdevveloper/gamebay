@@ -36,6 +36,13 @@ public class RestController {
         this.validator = validator;
     }
 
+    @PostMapping("/removeGame/{id}")
+    public String removeGame(@PathVariable Long id){
+        this.gameService.deleteGame(id);
+
+        return "done";
+    }
+
     @GetMapping("/getUser/{username}")
     public User getUser(@PathVariable String username) {
         return this.userService.findByUserName(username);
@@ -56,25 +63,16 @@ public class RestController {
         return this.gameService.getGame(gameId);
     }
 
-    @PostMapping("/transaction/")
-    public String addTransaction(){
-        Date d = new Date();
 
-        Transaction t = new Transaction(1000, d);
 
-        this.transactionService.saveTransaction(t);
-
-        return "done";
-    }
-
-    @PostMapping("/addUser/{login}/{password}/{gameName}")
+   /* @PostMapping("/addUser/{login}/{password}/{gameName}")
     public String addUserAndGame(@PathVariable String login,
                                  @PathVariable String password,
                                  @PathVariable String gameName) {
 
         User user = new User(7000, login, password);
-      /*  Game g = new Game("Cyberpunk 2077", "Key", 1000);
-        Game g1 = new Game(gameName, "Key", 12400);*/
+      *//*  Game g = new Game("Cyberpunk 2077", "Key", 1000);
+        Game g1 = new Game(gameName, "Key", 12400);*//*
         Offer offer = new Offer("Wither", "Gamekey", 1000);
         Date d = new Date();
 
@@ -97,5 +95,5 @@ public class RestController {
     public String deleteGame(@PathVariable Long id){
         this.gameService.deleteGame(id);
         return "works?";
-    }
+    }*/
 }

@@ -32,9 +32,9 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form>
+        <form th:method="post" th:action="@{/search}">
             <div class="input-group">
-                <input class="form-control" type="search" placeholder="Wyszukaj grę.." aria-label="Search">
+                <input th:name="search" class="form-control" type="search" placeholder="Wyszukaj grę.." aria-label="Search">
                 <div class="input-group-append">
                     <button class="btn btn-outline-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>
                     </button>
@@ -48,8 +48,11 @@
                     <i class="far fa-user"></i>
                     <span th:text="${user.getUsername()}"/>
                 </a>
-
-
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">
+                    <i class="fas fa-sign-out-alt"></i>Wyloguj
+                </a>
             </li>
             <li class="nav-item dropdown mr-auto">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -91,6 +94,8 @@
             </div>
         </div>
     </div>
+
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

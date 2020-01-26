@@ -84,9 +84,9 @@
             </div>
             <p class="text-black-50 w-100 text-center">Masz już konto? <a href="/register">zaloguj się</a> teraz!</p>
         </div>
-        <div th:if="${param.error}" class="alert alert-error text-center" style = "color:red">
+        <small th:if="${error}" class="alert alert-error text-center" style = "color:red">
             Użytkownik o takim loginie lub e-mailu już istnieje!
-        </div>
+        </small>
     </form>
 
 </div>

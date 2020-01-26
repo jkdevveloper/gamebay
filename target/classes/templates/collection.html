@@ -66,7 +66,7 @@
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link active" href="/panel">Panel użytkownika</a>
+                <a class="nav-link" href="/panel">Panel użytkownika</a>
             </li>
 
             <li class="nav-item">
@@ -74,6 +74,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/offers">Moje oferty</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/collection">Moja kolekcja</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
@@ -84,12 +87,25 @@
 
 </nav>
 
-
-
-<div th:each="game : ${user.getOwnedKeys()}">
-
-    <p th:text="${game.getTitle()}"></p>
-
+<div class="container rel">
+    <h1>Twoja kolekcja</h1>
+    <table class="table" >
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Klucz</th>
+            <th scope="col">Cena</th>
+        </tr>
+        </thead>
+        <tbody th:each="ownedKey : ${user.getOwnedKeys()}">
+        <tr>
+            <th scope="row" th:text = "${ownedKey.getId()}"></th>
+            <td th:text = "${ownedKey.getTitle()}"></td>
+            <td th:text = "${ownedKey.getGameKey()}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

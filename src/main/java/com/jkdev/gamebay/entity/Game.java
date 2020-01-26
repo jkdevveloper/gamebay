@@ -30,7 +30,6 @@ public class Game {
 
     @Id
     @Column(name = "id")
-
     Long id;
 
     @NotNull

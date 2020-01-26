@@ -44,6 +44,9 @@ public class Offer {
     @JsonBackReference
     User user;
 
+    @Column(name = "visible")
+    Boolean visible = true;
+
     @Transient
     public void setUser(User user) {
         this.user = user;

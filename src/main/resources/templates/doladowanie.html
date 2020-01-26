@@ -75,6 +75,9 @@
                 <a class="nav-link" href="/offers">Moje oferty</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="/collection">Moja kolekcja</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
             </li>
         </ul>
@@ -128,6 +131,9 @@
             <input type="number" th:name = "amount" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Ilość gCoin">
         </div>
         <button type="submit" class="btn btn-primary">Doładuj gCoin</button>
+        <small th:if="${gcoinError}" class="alert alert-error text-center" style = "color:red" >
+            Jednorazowo możesz doładować do 10000 gCoins
+        </small>
     </form>
     </div>
 </div>

@@ -76,6 +76,9 @@
                 <a class="nav-link" href="/offers">Moje oferty</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="/collection">Moja kolekcja</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
             </li>
         </ul>
@@ -133,7 +136,7 @@
 
                             <div class="col-lg-6">
 
-                                <form th:action="@{/panel}" th:method="post">
+                                <form th:action="@{/changeEmail}" th:method="post">
                                     <h2>Zmiana Email</h2>
                                     <div class="form-group">
                                         <label for="changeEmailInput">Adres Email</label>
@@ -143,18 +146,21 @@
                                     <div class="form-group">
                                         <label for="RetypeEmailInput">Powtórz Email</label>
                                         <input type="password" class="form-control" id="RetypeEmailInput"
-                                               placeholder="Powtórz Email">
+                                               th:name = "emailConfirm" placeholder="Powtórz Email">
                                     </div>
 
                                     <button type="submit" class="btn btn-primary" style="background-color:#eda007">
                                         Zatwierdź
                                     </button>
+                                    <small th:if="${error}" class="alert alert-error text-center" style = "color:red">
+                                            Adresy e-mail muszą się zgadzać!
+                                    </small>
                                 </form>
 
                             </div>
 
                             <div class="col-lg-6">
-                                <form>
+                                <form th:action="@{/changePassword}" th:method="post">
                                     <div class="form-group">
                                         <h2>Zmiana hasła</h2>
                                         <label for="changePasswordInput">Hasło</label>
@@ -164,11 +170,14 @@
                                     <div class="form-group">
                                         <label for="retypePasswordInput">Powtórz hasło</label>
                                         <input type="password" class="form-control" id="retypePasswordInput"
-                                               placeholder="Powtórz hasło">
+                                               th:name = "confirmation" placeholder="Powtórz hasło">
                                     </div>
                                     <button type="submit" class="btn btn-primary" style="background-color:#eda007">
                                         Zatwierdź
                                     </button>
+                                    <small th:if="${passwordError}" class="alert alert-error text-center" style = "color:red" >
+                                        Hasła muszą się zgadzać!
+                                    </small>
                                 </form>
                             </div>
                         </div>

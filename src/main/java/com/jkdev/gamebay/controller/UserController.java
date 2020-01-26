@@ -49,11 +49,11 @@ public class UserController {
 
 
     @PostMapping("/search")
-    public String afterSearch(@RequestParam("search") String search_string, Model model){
+    public String afterSearch(@ModelAttribute("search") String search_string, Model model){
         List<Offer> offers = offerService.getOffers();
         List<Offer> result_list = new ArrayList<>();
         for(Offer o : offers){
-            if(o.getTitle().toLowerCase().contains(search_string.toLowerCase())){
+            if(o.getTitle().toLowerCase().contains(search_string.toLowerCase()) && o.getVisible()){
                 result_list.add(o);
             }
         }
@@ -87,7 +87,7 @@ public class UserController {
             User loggedUser = this.userService.findByUserName(u.getUsername());
             List<Offer> displayedOffers = new ArrayList<>();
             for(Offer o : this.offerService.getOffers()){
-                if(!o.getUser().getId().equals(loggedUser.getId())){
+                if(!o.getUser().getId().equals(loggedUser.getId()) && o.getVisible()){
                     displayedOffers.add(o);
                 }
             }
@@ -103,6 +103,27 @@ public class UserController {
         return "transactions";
     }
 
+    @PostMapping("/removeFromCart")
+    public String removeFromCart(Model model, @RequestParam Long id){
+        org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = this.userService.findByUserName(u.getUsername());
+        Game g = this.gameService.getGame(id);
+        //TODO nie działa usuwanie z koszyka, przywraca o.visible ale nie wywala z koszyka xd
+
+        Offer o = this.offerService.getOfferById(id);
+        o.setVisible(true);
+        this.offerService.saveOffer(o);
+
+        this.gameService.deleteGame(g.getId());
+
+        this.userService.saveUser(user);
+
+
+        model.addAttribute("user", this.userService.findByUserName(u.getUsername()));
+
+        return "redirect:/cart";
+
+    }
 
     @GetMapping("/game")
     public String gameInfo(Model model, @RequestParam Long id){
@@ -123,10 +144,12 @@ public class UserController {
         org.springframework.security.core.userdetails.User u = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = this.userService.findByUserName(u.getUsername());
         Offer o = this.offerService.getOfferById(id);
+        o.setVisible(false);
+
         Game g = new Game(o.getId(), o.getTitle(), o.getGameKey(), o.getPrice());
 
         user.addGameToCart(g);
-
+        this.offerService.saveOffer(o);
         this.gameService.saveGame(g);
         this.userService.saveUser(user);
         User us = this.userService.findByUserName(u.getUsername());
@@ -152,6 +175,7 @@ public class UserController {
     @PostMapping("/buyGames")
     public String buyGames(Model model){
         //TODO WYSYŁANIE MAILA Z KODEM GRY
+        //TODO nie dodaje gościowi co gierke sprzedaje kasy XDD
         org.springframework.security.core.userdetails.User u =
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUserName(u.getUsername());
@@ -166,11 +190,11 @@ public class UserController {
             for(Game g : userService.findByUserName(u.getUsername()).getCart()){
                 OwnedKey ownedKey = new OwnedKey(g.getTitle(), g.getGame_key());
                 user.addGameToCollection(ownedKey);
-                offerService.deleteOffer(g.getId());
                 ownedKeyService.saveOwnedKey(ownedKey);
                 gamesToDelete.add(g);
                 long millis=System.currentTimeMillis();
-                Transaction t = new Transaction(g.getPrice(), new Date(millis));
+                Transaction t = new Transaction(g.getPrice(), new Date(millis), offerService.getOfferById(g.getId()).getUser().getId());
+                offerService.deleteOffer(g.getId());
                 user.addTransaction(t);
                 transactionService.saveTransaction(t);
             }
@@ -179,7 +203,7 @@ public class UserController {
             }
         }
 
-
+        this.userService.saveUser(user);
         user = userService.findByUserName(u.getUsername());
         model.addAttribute("user", user);
         return "redirect:/collection";
@@ -209,17 +233,20 @@ public class UserController {
         org.springframework.security.core.userdetails.User u =
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = this.userService.findByUserName(u.getUsername());
+        if(amount < 10000) {
+            Integer balance = user.getCoinBalance();
 
-        Integer balance = user.getCoinBalance();
+            user.setCoinBalance(balance + amount);
 
-        user.setCoinBalance(balance + amount);
+            this.userService.saveUser(user);
+            model.addAttribute("user", this.userService.findByUserName(u.getUsername()));
+            return "redirect:/panel";
 
-        this.userService.saveUser(user);
+        }else
+            model.addAttribute("user", this.userService.findByUserName(u.getUsername()));
+            model.addAttribute("gcoinError", " ");
+            return "doladowanie";
 
-        User us = this.userService.findByUserName(u.getUsername());
-        model.addAttribute("user", us);
-
-        return "panel";
     }
 
     @GetMapping("/newoffer")
@@ -264,12 +291,10 @@ public class UserController {
         return "sum";
     }
 
-
     @GetMapping("/login")
     public String login() {
         return "login";
     }
-
 
     @GetMapping("/panel")
     public String userPanel(Model model) {
@@ -279,26 +304,44 @@ public class UserController {
         return "panel";
     }
 
-    @PostMapping("/panel")
-    public String userModified(Model model, @ModelAttribute("email") String email,
-                               @ModelAttribute("password") String password){
+    @PostMapping("/changePassword")
+    public String passwordChanged(Model model, @ModelAttribute("password") String password,
+                                  @ModelAttribute("confirmation") String passwordConfirmation){
+
         org.springframework.security.core.userdetails.User u =
                 (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("user", userService.findByUserName(u.getUsername()));
 
         User user = userService.findByUserName(u.getUsername());
 
-        if(email != null && !email.equals("")){
-            user.setEmail(email);
-            userService.saveUser(user);
-        }
-        if(password != null && !password.equals("")){
+        if(password.equals(passwordConfirmation)){
             user.setPassword(password);
-            userService.saveUser(user);
-        }
+            this.userService.saveUser(user);
+            return "redirect:/panel";
+        }else
+            model.addAttribute("passwordError", " ");
+            return "panel";
 
+    }
 
-        return "redirect:/panel";
+    @PostMapping("/changeEmail")
+    public String emailChanged(Model model, @ModelAttribute("email") String email,
+                                  @ModelAttribute("emailConfirm") String emailConfirmation){
+
+        org.springframework.security.core.userdetails.User u =
+                (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", userService.findByUserName(u.getUsername()));
+
+        User user = userService.findByUserName(u.getUsername());
+
+        if(email.equals(emailConfirmation)){
+            user.setEmail(email);
+            this.userService.saveUser(user);
+            return "redirect:/panel";
+        }else
+            model.addAttribute("error", "Adresy e-mail muszą się zgadzać!");
+        return "panel";
+
     }
 
 
@@ -309,20 +352,26 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registration(@ModelAttribute User user) {
+    public String registration(@ModelAttribute User user, Model model) {
         Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 
-        if (constraintViolations.size() == 0) {
+        if (constraintViolations.size() == 0 && this.userService.findByUserName(user.getUsername()) == null &&
+        this.userService.findByEmail(user.getEmail()) == null) {
+
             this.userService.saveUser(user);
-        }
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken
-                (new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities()), user.getPassword(), user.getAuthorities());
 
-        authManager.authenticate(usernamePasswordAuthenticationToken);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken
+                    (new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities()), user.getPassword(), user.getAuthorities());
 
-        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            authManager.authenticate(usernamePasswordAuthenticationToken);
 
-        return "redirect:/panel";
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+            return "redirect:/panel";
+        }else
+            model.addAttribute("error", " ");
+            return "register";
+
 
     }
 }

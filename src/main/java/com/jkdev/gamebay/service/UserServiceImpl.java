@@ -81,10 +81,7 @@ public class UserServiceImpl implements IUserService {
             throw new RuntimeException("User not found");
     }
 
-    @Override
-    public void changeGameFromUserToUser(Game game, User seller, User buyer) {
 
-    }
 
     @Override
     public void addToCart(Game game, User user) {
@@ -96,5 +93,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User findByUserName(String username) {
         return this.userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return this.userRepository.findByEmail(email);
     }
 }

@@ -7,6 +7,11 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet">
+    <style>
+        .logo-text{
+            color:#eda007;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,6 +37,12 @@
             <li class="nav-item">
                 <a class="nav-link" href="/panel">
                     <i class="far fa-user"></i>
+                    <span th:text="${user.getUsername()}"/>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">
+                    <i class="fas fa-sign-out-alt"></i>Wyloguj
                 </a>
             </li>
             <li class="nav-item dropdown mr-auto">
@@ -66,7 +77,11 @@
         <tr>
             <th scope="row" th:text = "${cartItem.getId()}"></th>
             <td th:text = "${cartItem.getTitle()}"></td>
-            <td>Usuń</td>
+            <td>
+                <form th:action = "@{/removeFromCart(id=${cartItem.getId()})}" method="post">
+                    <button type="submit">Usuń</button>
+                </form>
+            </td>
             <td th:text = "${cartItem.getPrice()}"></td>
         </tr>
         </tbody>
@@ -89,7 +104,13 @@
     </table>
 </div>
 
+<script>
 
+    setTimeout(()=>{
+        console.log("After 5 minutes!")
+    }, 300000);
+
+</script>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

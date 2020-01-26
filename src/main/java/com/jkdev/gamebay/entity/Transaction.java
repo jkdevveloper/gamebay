@@ -17,9 +17,10 @@ import java.util.Date;
 @Table(name = "transactions")
 public class Transaction {
 
-    public Transaction(Integer price, Date date){
+    public Transaction(Integer price, Date date, Long seller_id){
         this.price = price;
         this.date = date;
+        this.seller_id = seller_id;
     }
 
     @Id
@@ -34,6 +35,9 @@ public class Transaction {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     User seller;
+
+    @Column(name = "seller_id")
+    Long seller_id;
 
     @JsonSerialize
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")

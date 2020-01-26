@@ -22,9 +22,9 @@ public interface IUserService {
 
     void removeCoins(Long userId, Integer amount);
 
-    void changeGameFromUserToUser(Game game, User seller, User buyer);
-
     void addToCart(Game game, User user);
 
     User findByUserName(String username);
+
+    User findByEmail(String email);
 }
